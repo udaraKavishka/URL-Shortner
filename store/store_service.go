@@ -22,3 +22,30 @@ var (
 const CacheDuration = 6 * time.Hour // Defines a constant for how long data should stay in the cache (6 hours).
 
 
+
+// InitializesStore sets up the Redis client and returns the store service instance.
+func InitializesStore() *StorageService {
+	// Create a new Redis client with specified connection options
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379", // Redis server address (localhost on default port 6379)
+		Password: "",               // No password used (adjust if Redis has authentication)
+		DB:       0,                // Use the default Redis database (DB 0)
+	})
+
+	// Ping the Redis server to test the connection
+	pong, err := redisClient.Ping(ctx).Result()
+	if err != nil {
+		// If the connection fails, stop execution and log the error
+		panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
+	}
+
+	// Print confirmation that Redis started successfully, showing the ping response
+	fmt.Printf("\nRedis Started Successfully: pong message = {%s}", pong)
+
+	// Assign the Redis client to the global storeService instance
+	storeService.redisClient = redisClient
+
+	// Return the pointer to the initialized StorageService
+	return storeService
+}
+
