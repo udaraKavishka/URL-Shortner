@@ -6,25 +6,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testStoreService= &StorageService{}
+var testStoreService = &StorageService{}
 
-func init(){
+func init() {
 	testStoreService = InitializesStore()
 }
 
-func TestStoreInit( t *testing.T){
-	assert.True(t,testStoreService.redisClient != nil)
+func TestStoreInit(t *testing.T) {
+	assert.True(t, testStoreService.redisClient != nil)
 }
 
-func TestInsertionAndRetriveal( t *testing.T){
+func TestInsertionAndRetriveal(t *testing.T) {
 	initialLink := "https://www.guru3d.com/news-story/spotted-ryzen-threadripper-pro-3995wx-processor-with-8-channel-ddr4,2.html"
 	userUId := "e0dba740-fc4b-4977-872c-d360239e6b1a"
 	shortURL := "Jsz4k57oAX"
 
-	SaveUrlMapping(shortURL,initialLink,userUId)
+	SaveUrlMapping(shortURL, initialLink, userUId)
 
-	retrieveUrl := RetrieveInitialUrl(shortURL)
+	retrieveUrl, err := RetrieveInitialUrl(shortURL)
+	assert.NoError(t, err)
 
-	assert.Equal(t,retrieveUrl,initialLink)
+	assert.Equal(t, retrieveUrl, initialLink)
 }
-
