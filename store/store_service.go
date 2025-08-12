@@ -15,13 +15,11 @@ type StorageService struct {
 
 // Top-level declarations for the storeService and Redis context
 var (
-	storeService = &StorageService{} // Creates a singleton-like instance of StorageService to be reused across the application.
-	ctx = context.Background()       // Initializes a base context for Redis commands, used to control timeout and cancelation of operations.
+	storeService = &StorageService{}    // Creates a singleton-like instance of StorageService to be reused across the application.
+	ctx          = context.Background() // Initializes a base context for Redis commands, used to control timeout and cancelation of operations.
 )
 
 const CacheDuration = 6 * time.Hour // Defines a constant for how long data should stay in the cache (6 hours).
-
-
 
 // InitializesStore sets up the Redis client and returns the store service instance.
 func InitializesStore() *StorageService {
@@ -49,9 +47,7 @@ func InitializesStore() *StorageService {
 	return storeService
 }
 
-
-
-func SaveUrlMapping(shortUrl string, originalUrl string, userId string){ 
+func SaveUrlMapping(shortUrl string, originalUrl string, userId string) {
 
 	err := storeService.redisClient.Set(ctx, shortUrl, originalUrl, CacheDuration).Err()
 	if err != nil {
@@ -60,12 +56,18 @@ func SaveUrlMapping(shortUrl string, originalUrl string, userId string){
 
 }
 
-func RetrieveInitialUrl(shortUrl string) string {
+func RetrieveInitialUrl(shortUrl string) (string, error) {
 	result, err := storeService.redisClient.Get(ctx, shortUrl).Result()
-	if err != nil{
-		panic(fmt.Sprintf("Failed retrieving key url | Error: %v -shortUrl : %s\n",err,shortUrl))
-	}
-	return result
+	// if err != nil{
+	// 	panic(fmt.Sprintf("Failed retrieving key url | Error: %v -shortUrl : %s\n",err,shortUrl))
+	// }
+	// return result
 
+	if err == redis.Nil {
+		return "", fmt.Errorf("short URL not found")
+	} else if err != nil {
+		return "", err
+	}
+	return result, nil
 
 }
