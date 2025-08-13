@@ -3,6 +3,7 @@ package store // Defines the package name. This code belongs to the 'store' pack
 import (
 	"context" // Imports the context package used to carry deadlines, cancelation signals, and other request-scoped values.
 	"fmt"
+	"net/url"
 	"os"
 	"time" // Imports the time package for working with durations, timestamps, etc.
 
@@ -49,14 +50,26 @@ const CacheDuration = 6 * time.Hour // Defines a constant for how long data shou
 // }
 
 func InitializesStore() *StorageService {
-	redisAddr := os.Getenv("REDIS_URL")
-	if redisAddr == "" {
-		redisAddr = "localhost:6379"
+	redisURL := os.Getenv("REDIS_URL")
+	if redisURL == "" {
+		redisURL = "redis://localhost:6379"
 	}
 
+	u, err := url.Parse(redisURL)
+	if err != nil {
+		panic(fmt.Sprintf("Invalid REDIS_URL: %v", err))
+	}
+
+	// Extract password if present
+	password := ""
+	if u.User != nil {
+		password, _ = u.User.Password()
+	}
+
+	// Create Redis client
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     redisAddr,
-		Password: "",
+		Addr:     u.Host,
+		Password: password,
 		DB:       0,
 	})
 
