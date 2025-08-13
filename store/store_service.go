@@ -49,7 +49,7 @@ const CacheDuration = 6 * time.Hour // Defines a constant for how long data shou
 // }
 
 func InitializesStore() *StorageService {
-	redisAddr := os.Getenv("REDIS_ADDR")
+	redisAddr := os.Getenv("REDIS_URL")
 	if redisAddr == "" {
 		redisAddr = "localhost:6379"
 	}
