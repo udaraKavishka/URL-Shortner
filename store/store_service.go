@@ -3,6 +3,7 @@ package store // Defines the package name. This code belongs to the 'store' pack
 import (
 	"context" // Imports the context package used to carry deadlines, cancelation signals, and other request-scoped values.
 	"fmt"
+	"os"
 	"time" // Imports the time package for working with durations, timestamps, etc.
 
 	"github.com/go-redis/redis/v8" // Imports the go-redis client library to interact with a Redis server.
@@ -22,28 +23,50 @@ var (
 const CacheDuration = 6 * time.Hour // Defines a constant for how long data should stay in the cache (6 hours).
 
 // InitializesStore sets up the Redis client and returns the store service instance.
-func InitializesStore() *StorageService {
-	// Create a new Redis client with specified connection options
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Redis server address (localhost on default port 6379)
-		Password: "",               // No password used (adjust if Redis has authentication)
-		DB:       0,                // Use the default Redis database (DB 0)
-	})
+// func InitializesStore() *StorageService {
+// 	// Create a new Redis client with specified connection options
+// 	redisClient := redis.NewClient(&redis.Options{
+// 		Addr:     "localhost:6379", // Redis server address (localhost on default port 6379)
+// 		Password: "",               // No password used (adjust if Redis has authentication)
+// 		DB:       0,                // Use the default Redis database (DB 0)
+// 	})
 
-	// Ping the Redis server to test the connection
-	pong, err := redisClient.Ping(ctx).Result()
-	if err != nil {
-		// If the connection fails, stop execution and log the error
-		panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
+// 	// Ping the Redis server to test the connection
+// 	pong, err := redisClient.Ping(ctx).Result()
+// 	if err != nil {
+// 		// If the connection fails, stop execution and log the error
+// 		panic(fmt.Sprintf("Failed to connect to Redis: %v", err))
+// 	}
+
+// 	// Print confirmation that Redis started successfully, showing the ping response
+// 	fmt.Printf("\nRedis Started Successfully: pong message = {%s}", pong)
+
+// 	// Assign the Redis client to the global storeService instance
+// 	storeService.redisClient = redisClient
+
+// 	// Return the pointer to the initialized StorageService
+// 	return storeService
+// }
+
+func InitializesStore() *StorageService {
+	redisAddr := os.Getenv("REDIS_ADDR")
+	if redisAddr == "" {
+		redisAddr = "localhost:6379"
 	}
 
-	// Print confirmation that Redis started successfully, showing the ping response
-	fmt.Printf("\nRedis Started Successfully: pong message = {%s}", pong)
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     redisAddr,
+		Password: "",
+		DB:       0,
+	})
 
-	// Assign the Redis client to the global storeService instance
+	pong, err := redisClient.Ping(ctx).Result()
+	if err != nil {
+		panic(fmt.Sprintf("Error init Redis: %v", err))
+	}
+
+	fmt.Printf("Redis started successfully: pong message = {%s}\n", pong)
 	storeService.redisClient = redisClient
-
-	// Return the pointer to the initialized StorageService
 	return storeService
 }
 
