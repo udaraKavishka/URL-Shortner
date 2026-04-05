@@ -9,7 +9,7 @@ function getOrCreateUserId(): string {
     return storedId;
   }
 
-  const generatedId = "user_" + Math.random().toString(36).substring(2, 9);
+  const generatedId = "user_" + crypto.randomUUID();
   localStorage.setItem(key, generatedId);
   return generatedId;
 }
