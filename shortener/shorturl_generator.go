@@ -15,7 +15,7 @@ func sha256OF(input string) []byte {
 	return algorithm.Sum(nil)
 }
 
-func base58Encoded(bytes []byte) string{
+func base58Encoded(bytes []byte) string {
 	encoding := base58.BitcoinEncoding
 	encoded, err := encoding.Encode(bytes)
 	if err != nil {
@@ -27,13 +27,10 @@ func base58Encoded(bytes []byte) string{
 
 }
 
-func GenerateShortLink(initialLink string, userId string) string{
+func GenerateShortLink(initialLink string, userId string) string {
 	urlHashBytes := sha256OF(initialLink + userId)
 	generatedNumber := new(big.Int).SetBytes(urlHashBytes).Uint64()
 
 	finalString := base58Encoded([]byte(fmt.Sprintf("%d", generatedNumber)))
 	return finalString[:8]
 }
-
-
-

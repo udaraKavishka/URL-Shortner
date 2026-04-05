@@ -49,4 +49,5 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "app/server.js"]
+# The standalone build outputs server.js at the root of the standalone directory
+CMD ["node", "server.js"]
