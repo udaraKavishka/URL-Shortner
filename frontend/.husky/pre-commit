@@ -2,3 +2,4 @@
 
 cd frontend || exit 1
 npx lint-staged
+npm run check

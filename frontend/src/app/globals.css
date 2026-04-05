@@ -1,16 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #f0fdf4;
-  --foreground: #171717;
+@theme {
+  --color-bg: rgb(255 255 255);
+  --color-surface: rgb(249 250 251);
+  --color-text: rgb(17 24 39);
+  --color-muted: rgb(107 114 128);
+  --color-primary: rgb(59 130 246);
+  --color-primary-hover: rgb(37 99 235);
+  --color-accent: rgb(20 184 166);
+  --color-border: rgb(229 231 235);
+  --color-success: rgb(34 197 94);
+  --color-error: rgb(239 68 68);
+}
+
+html.dark {
+  --color-bg: rgb(17 24 39);
+  --color-surface: rgb(31 41 55);
+  --color-text: rgb(243 244 246);
+  --color-muted: rgb(156 163 175);
+  --color-primary: rgb(59 130 246);
+  --color-primary-hover: rgb(96 165 250);
+  --color-accent: rgb(20 184 166);
+  --color-border: rgb(55 65 81);
+  --color-success: rgb(34 197 94);
+  --color-error: rgb(239 68 68);
+}
+
+* {
+  border-color: var(--color-border);
 }
 
 body {
-  color: var(--foreground);
-  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-  background-attachment: fixed;
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  @apply antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
 }

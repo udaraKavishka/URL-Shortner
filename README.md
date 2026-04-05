@@ -1,159 +1,76 @@
-# Go URL Shortener
+# Go URL Shortener 🚀
 
-A simple and fast URL shortening service built with Go, Gin, and Redis. This project provides endpoints for generating short links and redirecting to the original URLs.
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
-## Features
+A high-performance, containerized URL shortening service built with a **Golang** backend and **Next.js** frontend, using **Redis** for blazing-fast storage.
 
-* Create short URLs from long links
-* Redirect short URLs to original targets
-* Redis backed storage for fast lookups
-* Clean and simple API
+## ✨ Features
 
----
+*   **Fast & Efficient**: Built with Go (Gin framework) and Redis for low-latency redirects.
+*   **Modern UI**: Sleek, responsive frontend built with Next.js 14 and Tailwind CSS.
+*   **Containerized**: Fully Dockerized with multi-stage builds for optimized images.
+*   **Easy Deployment**: Orchestrated with Docker Compose for one-command setup.
 
-### Tech Stack
-* Go
-* Gin Web Framework
-* Redis
-* Docker (for Redis)
----
+## 🛠️ Tech Stack
 
-## Prerequisites
+*   **Backend**: Go, Gin Web Framework
+*   **Database**: Redis
+*   **Frontend**: Next.js (App Router), React, Tailwind CSS
+*   **DevOps**: Docker, Docker Compose
 
-* Go 1.11 or newer
-* Docker installed locally
-* Redis running in Docker
+## 🚀 Getting Started
 
-Start Redis using Docker:
+### Prerequisites
 
-```bash
-docker run -d \
-  --name redis-shortener \
-  -p 6379:6379 \
-  redis:latest
-```
+*   Docker & Docker Compose
 
----
+### Fast Start (Docker)
 
-## Project Setup
-
-Clone the project:
+The easiest way to run the full stack is with Docker Compose.
 
 ```bash
-git clone https://github.com/your-username/go-url-shortener.git
-cd go-url-shortener
+# Clone the repository
+git clone https://github.com/udaraKavishka/URL-Shortner.git
+cd URL-Shortner
+
+# Start the application
+docker-compose -f docker-compose.deploy.yml up --build -d
 ```
 
-Install dependencies:
+Access the application:
+*   **Frontend**: `http://localhost:3000`
+*   **Backend API**: `http://localhost:9808`
 
-```bash
-go mod tidy
-```
+### Local Development
 
-Run the service:
+If you want to run services individually:
 
-```bash
-go run main.go
-```
+1.  **Start Redis**:
+    ```bash
+    docker run -d -p 6379:6379 redis:alpine
+    ```
 
-The API will be available at:
+2.  **Start Backend**:
+    ```bash
+    go run main.go
+    ```
 
-```
-http://localhost:9808
-```
+3.  **Start Frontend**:
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
 
----
+## 📦 Deployment
 
-## API Endpoints
+This project includes a production-ready `docker-compose.deploy.yml`. You can deploy this to any VPS (DigitalOcean, AWS EC2, Linode) that has Docker installed.
 
-### Create short URL
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
 
-**POST** `/create-short-url`
+## 📝 License
 
-Request body:
-
-```json
-{
-  "long_url": "https://example.com/very-long-link",
-  "user_id": "12345"
-}
-```
-
-Sample curl request:
-
-```bash
-curl --request POST \
-  --header "Content-Type: application/json" \
-  --data '{
-    "long_url": "https://example.com/very-long-link",
-    "user_id": "12345"
-  }' \
-  http://localhost:9808/create-short-url
-```
-
-Response example:
-
-```json
-{
-  "message": "short url created successfully",
-  "short_url": "http://localhost:9808/a1B2c3D4"
-}
-```
-
-### Redirect
-
-**GET** `/:shortUrl`
-
-Example:
-
-Visit:
-
-```
-http://localhost:9808/a1B2c3D4
-```
-
-Browser should redirect to the original long URL.
-
----
-
-## Testing Example
-
-1. Start the service
-2. Send a POST request:
-
-```bash
-curl --request POST \
-  --header "Content-Type: application/json" \
-  --data '{
-    "long_url": "https://go.dev/doc/",
-    "user_id": "test-user"
-  }' \
-  http://localhost:9808/create-short-url
-```
-
-3. Copy the returned short_url
-4. Paste it in your browser or use curl:
-
-```bash
-curl -v http://localhost:9808/a1B2c3D4
-```
-
-You should see a 302 redirect to the original link.
-
----
-
-## Future Improvements
-
-* Dockerize the full service
-* Add SQL backup storage
-* Add a simple frontend
-* Add analytics for click tracking
-
----
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-Happy URL shortening! 🚀
-
----
+This project is licensed under the MIT License.
